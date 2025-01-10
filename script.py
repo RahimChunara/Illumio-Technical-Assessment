@@ -2,12 +2,14 @@ import csv
 import sys
 from collections import defaultdict
 
+# Mapping of protocol numbers
 PROTOCOL_MAP = {
     '1':  'icmp',
     '6':  'tcp',
     '17': 'udp',
 }
 
+# Creates a dictionary mapping (dstport, protocol) to tags
 def load_lookup_table(lookup_file_path):
     lookup_dict = {}
     with open(lookup_file_path, 'r', encoding='utf-8') as f:
@@ -19,6 +21,7 @@ def load_lookup_table(lookup_file_path):
             lookup_dict[(dstport, protocol)] = tag
     return lookup_dict
 
+# Extract destination port and protocol
 def parse_flow_log_line(line):
     parts = line.strip().split()
     if len(parts) < 14:
@@ -32,6 +35,7 @@ def parse_flow_log_line(line):
     except (IndexError, ValueError):
         return None
 
+# Generates tag and port/protocol counts
 def main(flow_log_file_path, lookup_file_path):
     lookup_dict = load_lookup_table(lookup_file_path)
     
